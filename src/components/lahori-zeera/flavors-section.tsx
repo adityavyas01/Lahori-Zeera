@@ -45,8 +45,8 @@ export default function FlavorsSection() {
   };
 
   return (
-    <section id="flavors" className="w-full py-20 md:py-28 lg:py-32 bg-background">
-      <div className="container mx-auto px-4 md:px-6">
+    <section id="flavors" className="w-full overflow-hidden bg-background">
+      <div className="container mx-auto px-4 md:px-6 py-20 md:py-28 lg:py-32">
         <div className="text-center mb-16">
             <h2 className="font-headline text-4xl sm:text-5xl md:text-6xl font-bold text-foreground">
             Blockbuster Cast
@@ -59,7 +59,7 @@ export default function FlavorsSection() {
       </div>
       
       <motion.div
-        className="relative grid grid-cols-1 md:grid-cols-3 min-h-[70vh] md:min-h-[80vh] w-full"
+        className="relative grid grid-cols-1 md:grid-cols-3 w-full"
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
@@ -69,32 +69,37 @@ export default function FlavorsSection() {
           <div key={variant.id} className="relative flex flex-col overflow-hidden group">
             <motion.div
               className="absolute inset-0 w-full h-full"
-              style={{ backgroundColor: variant.themeColor + 'E6' }} // Added some transparency
+              style={{ backgroundColor: variant.themeColor }}
               variants={rectangleVariants}
             />
 
             <motion.div
-              className="relative z-10 flex flex-col items-center text-center w-full h-full py-12 px-4"
+              className="relative z-10 flex flex-col items-center justify-between w-full h-full p-8 text-center min-h-[80vh]"
               variants={contentVariants}
             >
-              <div className="relative flex-grow w-40 h-80 md:w-48 lg:w-56 md:h-[400px] lg:h-[450px] mb-8 transition-transform duration-500 ease-in-out group-hover:scale-110">
-                <Image
-                  src={variant.bottleImage}
-                  alt={`Lahori ${variant.name} bottle`}
-                  fill
-                  className="object-contain drop-shadow-2xl"
-                  data-ai-hint={variant.bottleImageHint}
-                />
+              <div className="w-full flex-grow flex items-center justify-center">
+                  <div className="relative w-1/2 md:w-2/3 max-w-[280px]">
+                    <Image
+                      src={variant.bottleImage}
+                      alt={`Lahori ${variant.name} bottle`}
+                      width={400}
+                      height={800}
+                      className="object-contain drop-shadow-2xl transition-transform duration-500 ease-in-out group-hover:scale-110"
+                      data-ai-hint={variant.bottleImageHint}
+                    />
+                  </div>
               </div>
 
-              <div className="space-y-4 mt-auto">
-                <h3 className="font-headline text-3xl font-bold text-white">
+
+              <div className="space-y-4 mt-8">
+                <h3 className="font-headline text-4xl font-bold text-white">
                   Lahori {variant.name}
                 </h3>
                 <Button
                   variant="outline"
                   className={cn(
-                    "rounded-full border-2 bg-transparent text-white hover:bg-white hover:text-background transition-all duration-300 px-8"
+                    "rounded-full border-2 bg-transparent text-white hover:bg-white transition-all duration-300 px-8 py-6 text-lg",
+                    "hover:text-black"
                   )}
                   style={{ borderColor: "white" }}
                 >
