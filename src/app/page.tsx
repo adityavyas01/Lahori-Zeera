@@ -113,7 +113,7 @@ export default function Home() {
             </div>
         </div>
 
-        <div className="relative z-10 bg-background -mt-[200vh]">
+        <div className="relative z-10 bg-background -mt-[100vh]">
             <AboutSection />
             <FlavorsSection />
             <IngredientsSection />
