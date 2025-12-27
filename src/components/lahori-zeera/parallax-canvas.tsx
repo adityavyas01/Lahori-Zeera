@@ -42,9 +42,9 @@ export default function ParallaxCanvas({ imageFrames, frameCount }: ParallaxCanv
     
     const scrollY = window.scrollY;
 
-    // The animation happens between 100vh and 200vh of scroll.
-    const animationStart = window.innerHeight;
-    const animationDuration = window.innerHeight; // The animation lasts for 1 full screen height of scroll.
+    // The animation happens over a scroll distance of one screen height.
+    const animationStart = 0; // Start the animation from the very top.
+    const animationDuration = window.innerHeight; 
     
     // Calculate how far we are into the animation zone.
     const scrollFraction = Math.max(0, Math.min(1, (scrollY - animationStart) / animationDuration));
