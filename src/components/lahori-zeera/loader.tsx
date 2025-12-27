@@ -9,14 +9,11 @@ type LoaderProps = {
 export default function Loader({ progress }: LoaderProps) {
   return (
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-background">
-      <div className="w-full max-w-sm text-center">
-        <h1 className="font-headline text-5xl font-bold text-primary-foreground">
+      <div className="w-full max-w-sm text-center space-y-4">
+        <h1 className="font-headline text-5xl font-bold text-primary animate-pulse">
           Lahori Zeera
         </h1>
-        <div className="mt-8 space-y-2">
-          <Progress value={progress} className="h-2 w-full" />
-          <p className="font-mono text-sm text-muted-foreground">{progress}%</p>
-        </div>
+        <p className="text-muted-foreground">Getting the first sip ready...</p>
       </div>
     </div>
   );
