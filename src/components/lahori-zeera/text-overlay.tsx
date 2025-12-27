@@ -14,10 +14,12 @@ export default function TextOverlay({ variant, isSwitching }: TextOverlayProps) 
     <div className="flex-grow md:col-span-3 flex flex-col justify-center h-full relative text-center md:text-left p-4 sm:p-6">
       <div
         className={cn(
-          "space-y-2 sm:space-y-4 md:space-y-6 transition-opacity duration-500 relative z-10 @container/text p-6 rounded-xl",
+          "space-y-2 sm:space-y-4 md:space-y-6 transition-opacity duration-500 relative z-10 @container/text",
           isSwitching ? 'opacity-0' : 'opacity-100'
         )}
-        style={{ textShadow: '0 2px 15px rgba(0,0,0,0.5)' }}
+        style={{ 
+          textShadow: '0 0 5px rgba(0,0,0,0.8), 0 0 10px rgba(0,0,0,0.5), 0 0 20px rgba(0,0,0,0.3)'
+        }}
       >
         <h1 className="font-headline text-5xl @[300px]:text-7xl @md:text-8xl @lg:text-9xl font-bold uppercase tracking-tighter text-white">
           {variant.name}
