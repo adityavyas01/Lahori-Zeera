@@ -3,13 +3,15 @@
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Menu, X } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import {
   Sheet,
   SheetContent,
   SheetTrigger,
   SheetTitle,
 } from "@/components/ui/sheet"
+import { variants } from '@/lib/variants';
+import { AnimatePresence, motion } from 'framer-motion';
 
 
 const navLinks = [
@@ -24,13 +26,22 @@ const navLinks = [
 export default function Header() {
     const [scrolled, setScrolled] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [animatedWordIndex, setAnimatedWordIndex] = useState(0);
 
     useEffect(() => {
+        const wordInterval = setInterval(() => {
+            setAnimatedWordIndex(prevIndex => (prevIndex + 1) % variants.length);
+        }, 2000);
+
         const handleScroll = () => {
             setScrolled(window.scrollY > 50);
         };
         window.addEventListener('scroll', handleScroll, { passive: true });
-        return () => window.removeEventListener('scroll', handleScroll);
+        
+        return () => {
+            clearInterval(wordInterval);
+            window.removeEventListener('scroll', handleScroll);
+        };
     }, []);
 
     const NavContent = () => (
@@ -56,8 +67,23 @@ export default function Header() {
             )}
         >
             <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
-                <a href="#" className="font-headline text-2xl font-bold text-foreground">
-                    Lahori Zeera
+                <a href="#" className="font-headline text-2xl font-bold text-foreground flex items-center gap-2">
+                    <span>Lahori</span>
+                    <div className="relative h-8 w-28 overflow-hidden">
+                        <AnimatePresence>
+                            <motion.span
+                                key={animatedWordIndex}
+                                initial={{ y: '100%', opacity: 0 }}
+                                animate={{ y: '0%', opacity: 1 }}
+                                exit={{ y: '-100%', opacity: 0 }}
+                                transition={{ duration: 0.5, ease: 'easeInOut' }}
+                                className="absolute inset-0 flex items-center justify-start"
+                                style={{ color: variants[animatedWordIndex].themeColor }}
+                            >
+                                {variants[animatedWordIndex].name}
+                            </motion.span>
+                        </AnimatePresence>
+                    </div>
                 </a>
 
                 {/* Desktop Nav */}
