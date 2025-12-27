@@ -11,21 +11,21 @@ type TextOverlayProps = {
 
 export default function TextOverlay({ variant, isSwitching }: TextOverlayProps) {
   return (
-    <div className="flex-grow md:col-span-3 flex flex-col justify-center h-full relative text-center md:text-left">
-       <div className="absolute inset-0 -left-8 -right-8 md:-left-16 md:-right-1/2 bg-gradient-to-r from-black/70 via-black/50 to-transparent" />
+    <div className="flex-grow md:col-span-3 flex flex-col justify-center h-full relative text-center md:text-left p-4 sm:p-6">
       <div
         className={cn(
-          "space-y-4 md:space-y-6 transition-opacity duration-500 relative z-10",
+          "space-y-2 sm:space-y-4 md:space-y-6 transition-opacity duration-500 relative z-10",
           isSwitching ? 'opacity-0' : 'opacity-100'
         )}
+        style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.7)' }}
       >
-        <h1 className="font-headline text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-bold uppercase tracking-tighter text-white">
+        <h1 className="font-headline text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold uppercase tracking-tighter text-white">
           {variant.name}
         </h1>
         <p className="font-body text-base sm:text-lg md:text-xl font-bold uppercase tracking-widest text-primary">
           {variant.subtitle}
         </p>
-        <p className="font-body text-sm sm:text-base md:text-lg max-w-md text-balance text-white/80 mx-auto md:mx-0">
+        <p className="font-body text-sm sm:text-base md:text-lg max-w-md text-balance text-white/90 mx-auto md:mx-0">
           {variant.description}
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 pt-4">
