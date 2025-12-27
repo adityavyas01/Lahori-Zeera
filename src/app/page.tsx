@@ -95,7 +95,7 @@ export default function Home() {
       <div className={cn("transition-opacity duration-1000", showContent ? "opacity-100" : "opacity-0")}>
         <Header />
         
-        <div className="relative h-[200vh]">
+        <div className="relative h-[300vh]">
             <div className="sticky top-0 h-screen w-screen overflow-hidden">
                 <ParallaxCanvas imageFrames={imageFrames} />
                 
@@ -113,7 +113,7 @@ export default function Home() {
             </div>
         </div>
 
-        <div className="relative z-10 bg-background -mt-[100vh]">
+        <div className="relative z-10 bg-background -mt-[200vh]">
             <AboutSection />
             <FlavorsSection />
             <IngredientsSection />

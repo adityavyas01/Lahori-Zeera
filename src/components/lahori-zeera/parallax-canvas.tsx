@@ -34,14 +34,19 @@ export default function ParallaxCanvas({ imageFrames }: ParallaxCanvasProps) {
   const handleScroll = useCallback(() => {
     if (!imageFrames.length) return;
     
-    // We only want this scroll effect for the first part of the page.
-    // Let's say the parallax section is 200vh tall.
-    const parallaxHeight = window.innerHeight * 2;
+    // The parallax section is 300vh tall.
+    const parallaxHeight = window.innerHeight * 3;
     const scrollY = window.scrollY;
 
     if (scrollY > parallaxHeight) return;
 
-    const scrollFraction = Math.min(1, scrollY / (parallaxHeight - window.innerHeight));
+    // The animation should happen over the middle 100vh of the 300vh scroll.
+    // It starts after scrolling 100vh and ends after scrolling 200vh.
+    const animationStart = window.innerHeight;
+    const animationEnd = window.innerHeight * 2;
+    const animationDuration = animationEnd - animationStart;
+
+    const scrollFraction = Math.max(0, Math.min(1, (scrollY - animationStart) / animationDuration));
     
     const newFrameIndex = Math.min(
       imageFrames.length - 1,
