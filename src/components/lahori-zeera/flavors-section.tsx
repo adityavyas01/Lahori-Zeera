@@ -1,30 +1,54 @@
+
 'use client';
 
-import { useState } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { variants } from '@/lib/variants';
-import { cn } from '@/lib/utils';
 import SectionWrapper from './section-wrapper';
 import { Button } from '../ui/button';
+import { cn } from '@/lib/utils';
 
 export default function FlavorsSection() {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-
-  const getCardVariant = (index: number) => {
-    if (hoveredIndex === null) return 'initial';
-    return hoveredIndex === index ? 'hovered' : 'dimmed';
+  const containerVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.2,
+      },
+    },
   };
 
-  const cardAnimation = {
-    initial: { scale: 1, opacity: 1 },
-    hovered: { scale: 1.05, opacity: 1 },
-    dimmed: { scale: 0.95, opacity: 0.6 },
+  const rectangleVariants = {
+    hidden: {
+      scaleY: 0,
+      originY: 1,
+    },
+    visible: {
+      scaleY: 1,
+      originY: 1,
+      transition: {
+        duration: 0.8,
+        ease: [0.6, 0.01, -0.05, 0.95],
+      },
+    },
+  };
+
+  const contentVariants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: 'easeOut',
+        delay: 0.5,
+      },
+    },
   };
 
   return (
-    <SectionWrapper id="flavors" className="bg-secondary/20">
-      <div className="text-center mb-12">
+    <SectionWrapper id="flavors" className="overflow-hidden">
+      <div className="text-center mb-16">
         <h2 className="font-headline text-4xl sm:text-5xl md:text-6xl font-bold text-foreground">
           Blockbuster Cast
         </h2>
@@ -33,71 +57,54 @@ export default function FlavorsSection() {
           Shikanji or Nimboo, peeyo inhe baar baar !
         </p>
       </div>
-      <div
-        className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12"
-        onMouseLeave={() => setHoveredIndex(null)}
-      >
-        {variants.map((variant, index) => (
-          <motion.div
-            key={variant.id}
-            className="text-center group flex flex-col p-6 rounded-2xl transition-colors duration-500"
-            onMouseEnter={() => setHoveredIndex(index)}
-            variants={cardAnimation}
-            animate={getCardVariant(index)}
-            transition={{ duration: 0.4, ease: 'easeOut' }}
-            style={{
-              backgroundColor: hoveredIndex === index ? variant.themeColor + '20' : 'transparent',
-            }}
-          >
-            <div className="relative mb-6 flex-grow flex items-center justify-center">
-              <div className="relative w-64 h-64">
-                <motion.div
-                  className="absolute inset-0 rounded-full"
-                  style={{ backgroundColor: variant.themeColor, opacity: 0.8 }}
-                  initial={{ scale: 1 }}
-                  animate={{ scale: hoveredIndex === index ? 1.05 : 1 }}
-                  transition={{ duration: 0.4, ease: 'easeOut' }}
-                />
-                <motion.div
-                  className="absolute inset-0"
-                  initial={{ scale: 1 }}
-                  animate={{ scale: hoveredIndex === index ? 1.1 : 1, y: hoveredIndex === index ? -10 : 0 }}
-                  transition={{ duration: 0.4, ease: 'easeOut' }}
-                >
-                  <Image
-                    src={variant.bottleImage}
-                    alt={`Lahori ${variant.name} bottle`}
-                    fill
-                    className="object-contain drop-shadow-2xl"
-                    data-ai-hint={variant.bottleImageHint}
-                  />
-                </motion.div>
-                <div className="absolute top-0 right-0 bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg -rotate-12">
-                  Save 5%
-                </div>
-              </div>
-            </div>
 
-            <div className="space-y-4 mt-auto">
-              <div>
-                <p className="text-muted-foreground">
-                  <span className="line-through">MRP 240.00</span> From Rs.
-                  228.00
-                </p>
-                <h3 className="font-headline text-3xl font-bold text-foreground">
+      <motion.div
+        className="relative grid grid-cols-1 md:grid-cols-3 gap-8 min-h-[70vh] md:min-h-[80vh]"
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+      >
+        {variants.map((variant) => (
+          <div key={variant.id} className="relative flex justify-center pt-24 md:pt-32">
+            <motion.div
+              className="absolute bottom-0 left-0 w-full h-full rounded-t-3xl"
+              style={{ backgroundColor: variant.themeColor + '40' }}
+              variants={rectangleVariants}
+            ></motion.div>
+
+            <motion.div
+              className="relative z-10 flex flex-col items-center text-center w-full"
+              variants={contentVariants}
+            >
+              <div className="relative w-48 h-96 md:w-56 lg:w-64 md:h-[450px] lg:h-[500px] mb-6">
+                <Image
+                  src={variant.bottleImage}
+                  alt={`Lahori ${variant.name} bottle`}
+                  fill
+                  className="object-contain drop-shadow-2xl"
+                  data-ai-hint={variant.bottleImageHint}
+                />
+              </div>
+
+              <div className="space-y-4 mt-auto">
+                <h3 className="font-headline text-3xl font-bold" style={{ color: variant.themeColor }}>
                   Lahori {variant.name}
                 </h3>
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "rounded-full border-2 bg-transparent hover:bg-foreground hover:text-background transition-all duration-300 px-8"
+                  )}
+                  style={{ borderColor: variant.themeColor, color: variant.themeColor }}
+                >
+                  Shop Now
+                </Button>
               </div>
-              <Button
-                variant="outline"
-                className="rounded-full border-2 bg-transparent hover:bg-foreground hover:text-background transition-all duration-300 px-8"
-              >
-                Shop Now
-              </Button>
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
         ))}
-      </div>
+      </motion.div>
     </SectionWrapper>
   );
 }
