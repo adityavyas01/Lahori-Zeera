@@ -33,8 +33,8 @@ export default function AboutSection() {
         </div>
         <div className="space-y-8">
           {brandPillars.map((pillar) => (
-            <div key={pillar.title} className="flex items-start gap-6">
-              <div className="flex-shrink-0 rounded-full bg-primary/10 p-4">
+            <div key={pillar.title} className="flex items-start gap-4 sm:gap-6">
+              <div className="flex-shrink-0 rounded-full bg-primary/10 p-3 sm:p-4">
                 {pillar.icon}
               </div>
               <div>

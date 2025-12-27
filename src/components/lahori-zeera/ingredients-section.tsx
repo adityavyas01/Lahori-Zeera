@@ -31,13 +31,13 @@ export default function IngredientsSection() {
   return (
     <SectionWrapper id="ingredients">
         <div className="text-center mb-12">
-            <h2 className="font-headline text-5xl md:text-6xl font-bold text-foreground">What’s Inside the Bottle?</h2>
+            <h2 className="font-headline text-4xl sm:text-5xl md:text-6xl font-bold text-foreground">What’s Inside the Bottle?</h2>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {ingredients.map((ingredient) => (
                 <Card key={ingredient.name} className="overflow-hidden bg-card border-border hover:shadow-lg transition-shadow duration-300">
                     {ingredient.image && (
-                        <div className="aspect-w-16 aspect-h-9">
+                        <div className="aspect-video">
                             <Image
                                 src={ingredient.image.imageUrl}
                                 alt={ingredient.name}

@@ -27,15 +27,15 @@ export default function FaqSection() {
         <SectionWrapper id="faq">
             <div className="max-w-3xl mx-auto">
                 <div className="text-center mb-12">
-                    <h2 className="font-headline text-5xl md:text-6xl font-bold text-foreground">The Essentials</h2>
+                    <h2 className="font-headline text-4xl sm:text-5xl md:text-6xl font-bold text-foreground">The Essentials</h2>
                 </div>
                 <Accordion type="single" collapsible className="w-full">
                     {faqs.map((faq, index) => (
                         <AccordionItem value={`item-${index}`} key={index}>
-                            <AccordionTrigger className="text-lg font-bold text-left hover:no-underline text-foreground">
+                            <AccordionTrigger className="text-base sm:text-lg font-bold text-left hover:no-underline text-foreground">
                                 {faq.question}
                             </AccordionTrigger>
-                            <AccordionContent className="text-base text-muted-foreground">
+                            <AccordionContent className="text-sm sm:text-base text-muted-foreground">
                                 {faq.answer}
                             </AccordionContent>
                         </AccordionItem>

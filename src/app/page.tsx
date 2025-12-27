@@ -105,9 +105,9 @@ export default function Home() {
                     </div>
                 )}
 
-                <div className="absolute inset-0 z-20 grid grid-cols-5 p-8 md:p-12 lg:p-16">
+                <div className="absolute inset-0 z-20 flex flex-col md:grid md:grid-cols-5 p-8 md:p-12 lg:p-16">
                     <TextOverlay variant={currentVariant} isSwitching={isSwitching} />
-                    <div className="col-span-1" />
+                    <div className="hidden md:block col-span-1" />
                     <VariantNav onNext={handleNext} onPrev={handlePrev} currentIndex={currentVariantIndex} />
                 </div>
             </div>
