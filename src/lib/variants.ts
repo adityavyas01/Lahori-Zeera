@@ -14,7 +14,7 @@ export const variants: Variant[] = [
     name: "ZEERA",
     subtitle: "THE ORIGINAL DESI PUNCH",
     description: "The flagship blend of roasted cumin and black salt. A bold, digestive fizz that defines the modern desi soda experience.",
-    themeColor: "#4B3621",
+    themeColor: "#76AB3B",
     themeClass: "theme-zeera",
     baseImageUrl: "https://cpqpdylzdipzwmtwvknx.supabase.co/storage/v1/object/public/Zeera/frame_000_delay-0.04s.webp",
   },
