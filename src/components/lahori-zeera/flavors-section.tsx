@@ -7,7 +7,7 @@ import Image from "next/image";
 export default function FlavorsSection() {
     // A mid-point frame from the animation sequence
     const getBottleImageUrl = (baseUrl: string) => {
-        return baseUrl.replace('frame_000', `frame_090`);
+        return baseUrl.replace('frame_000', `frame_045`);
     }
 
     return (
