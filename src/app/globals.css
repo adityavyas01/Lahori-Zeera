@@ -54,10 +54,10 @@
   }
 
   .theme-zeera {
-    --background: 90 10% 8%;
+    --background: 88 15% 8%;
     --primary: 88 50% 45%;
-    --accent: 90 40% 35%;
-    --primary-foreground: 90 20% 95%;
+    --accent: 88 40% 35%;
+    --primary-foreground: 88 20% 95%;
   }
 
   .theme-nimboo {
