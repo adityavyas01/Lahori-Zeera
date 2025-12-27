@@ -21,11 +21,10 @@ export default function FlavorsSection() {
   const rectangleVariants = {
     hidden: {
       scaleY: 0,
-      originY: 1,
+      originY: 'bottom',
     },
     visible: {
       scaleY: 1,
-      originY: 1,
       transition: {
         duration: 0.8,
         ease: [0.6, 0.01, -0.05, 0.95],
@@ -66,18 +65,18 @@ export default function FlavorsSection() {
         viewport={{ once: true, amount: 0.2 }}
       >
         {variants.map((variant) => (
-          <div key={variant.id} className="relative flex justify-center pt-24 md:pt-32">
+          <div key={variant.id} className="relative flex flex-col pt-12 pb-8 px-4 rounded-t-3xl overflow-hidden">
             <motion.div
-              className="absolute bottom-0 left-0 w-full h-full rounded-t-3xl"
+              className="absolute inset-0 w-full h-full"
               style={{ backgroundColor: variant.themeColor + '40' }}
               variants={rectangleVariants}
-            ></motion.div>
+            />
 
             <motion.div
-              className="relative z-10 flex flex-col items-center text-center w-full"
+              className="relative z-10 flex flex-col items-center text-center w-full h-full"
               variants={contentVariants}
             >
-              <div className="relative w-48 h-96 md:w-56 lg:w-64 md:h-[450px] lg:h-[500px] mb-6">
+              <div className="relative flex-grow w-40 h-80 md:w-48 lg:w-56 md:h-[400px] lg:h-[450px]">
                 <Image
                   src={variant.bottleImage}
                   alt={`Lahori ${variant.name} bottle`}
