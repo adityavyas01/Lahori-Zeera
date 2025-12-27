@@ -24,37 +24,63 @@ export default function Home() {
   const [isSwitching, setIsSwitching] = useState(false);
   const [imageFrames, setImageFrames] = useState<HTMLImageElement[]>([]);
   const [showContent, setShowContent] = useState(false);
+  const [areAllFramesLoaded, setAreAllFramesLoaded] = useState(false);
 
   const currentVariant = useMemo(() => variants[currentVariantIndex], [currentVariantIndex]);
+
+  const getFrameUrl = (variant: typeof variants[0], frame: number) => {
+    const frameNumber = String(frame).padStart(3, '0');
+    return variant.baseImageUrl.replace('frame_000', `frame_${frameNumber}`);
+  };
 
   const preloadImages = useCallback(async (variantIndex: number, isInitial: boolean) => {
     if (!isInitial) {
       setIsSwitching(true);
+    } else {
+      setIsInitialLoading(true);
     }
     setLoadingProgress(0);
+    setAreAllFramesLoaded(false);
 
     const variant = variants[variantIndex];
-    const frameUrls = Array.from({ length: FRAME_COUNT }, (_, i) => {
-      const frameNumber = String(i).padStart(3, '0');
-      return variant.baseImageUrl.replace('frame_000', `frame_${frameNumber}`);
+    
+    // Load first frame immediately
+    const firstFrameImg = new Image();
+    firstFrameImg.src = getFrameUrl(variant, 0);
+    
+    await new Promise(resolve => {
+        firstFrameImg.onload = resolve;
     });
 
-    const loadedImages: HTMLImageElement[] = [];
-    let loadedCount = 0;
+    setImageFrames([firstFrameImg]);
+    if (isInitial) {
+      setLoadingProgress(1); // Indicate that the first frame is loaded
+      setIsInitialLoading(false);
+      setTimeout(() => setShowContent(true), 500);
+    }
+    
+    // Lazy load remaining frames
+    const frameUrls = Array.from({ length: FRAME_COUNT - 1 }, (_, i) => getFrameUrl(variant, i + 1));
+    const loadedImages: HTMLImageElement[] = [firstFrameImg];
+    let loadedCount = 1;
 
-    await Promise.all(frameUrls.map(url => {
-      return new Promise<void>((resolve, reject) => {
+    const promises = frameUrls.map(url => {
+      return new Promise<HTMLImageElement>((resolve, reject) => {
         const img = new Image();
         img.src = url;
         img.onload = () => {
           loadedCount++;
-          setLoadingProgress(Math.round((loadedCount / FRAME_COUNT) * 100));
-          loadedImages.push(img);
-          resolve();
+          if(isInitial) {
+            setLoadingProgress(Math.round((loadedCount / FRAME_COUNT) * 100));
+          }
+          resolve(img);
         };
         img.onerror = reject;
       });
-    }));
+    });
+
+    const remainingImages = await Promise.all(promises);
+    loadedImages.push(...remainingImages);
 
     loadedImages.sort((a, b) => {
         const aFrame = parseInt(a.src.match(/frame_(\d{3})/)?.[1] || '0', 10);
@@ -63,11 +89,9 @@ export default function Home() {
     });
 
     setImageFrames(loadedImages);
+    setAreAllFramesLoaded(true);
 
-    if (isInitial) {
-      setIsInitialLoading(false);
-      setTimeout(() => setShowContent(true), 500); // Fade in content after loader
-    } else {
+    if (!isInitial) {
       setIsSwitching(false);
     }
   }, []);
@@ -76,16 +100,20 @@ export default function Home() {
     preloadImages(0, true);
   }, [preloadImages]);
 
+  const handleVariantChange = (newIndex: number) => {
+    if (newIndex === currentVariantIndex) return;
+    setCurrentVariantIndex(newIndex);
+    preloadImages(newIndex, false);
+  }
+
   const handleNext = () => {
     const nextIndex = (currentVariantIndex + 1) % variants.length;
-    setCurrentVariantIndex(nextIndex);
-    preloadImages(nextIndex, false);
+    handleVariantChange(nextIndex);
   };
 
   const handlePrev = () => {
     const prevIndex = (currentVariantIndex - 1 + variants.length) % variants.length;
-    setCurrentVariantIndex(prevIndex);
-    preloadImages(prevIndex, false);
+    handleVariantChange(prevIndex);
   };
 
   return (
@@ -97,7 +125,7 @@ export default function Home() {
         
         <div className="relative h-[300vh]">
             <div className="sticky top-0 h-screen w-screen overflow-hidden">
-                <ParallaxCanvas imageFrames={imageFrames} frameCount={FRAME_COUNT}/>
+                <ParallaxCanvas imageFrames={imageFrames} frameCount={FRAME_COUNT} enabled={areAllFramesLoaded} />
                 
                 {isSwitching && (
                     <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm transition-opacity duration-500">

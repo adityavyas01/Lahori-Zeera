@@ -41,7 +41,7 @@ export default function FlavorsSection() {
                             <CardContent className="space-y-4 px-4 sm:px-6">
                                 <p className="text-muted-foreground italic">"{data?.vibe}"</p>
                                 <div>
-                                    <h4 className="font-bold text-foreground">The Mix:</h4>
+                                    <h3 className="font-bold text-foreground">The Mix:</h3>
                                     <p className="text-muted-foreground text-sm">{data?.mix}</p>
                                 </div>
                             </CardContent>

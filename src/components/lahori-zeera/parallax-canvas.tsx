@@ -5,9 +5,10 @@ import { useEffect, useRef, useCallback } from 'react';
 type ParallaxCanvasProps = {
   imageFrames: HTMLImageElement[];
   frameCount: number;
+  enabled: boolean;
 };
 
-export default function ParallaxCanvas({ imageFrames, frameCount }: ParallaxCanvasProps) {
+export default function ParallaxCanvas({ imageFrames, frameCount, enabled }: ParallaxCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const frameIndexRef = useRef(0);
   const animationFrameIdRef = useRef<number>();
@@ -28,7 +29,6 @@ export default function ParallaxCanvas({ imageFrames, frameCount }: ParallaxCanv
     const ctx = canvas?.getContext('2d');
     if (!ctx || imageFrames.length === 0) return;
     
-    // Clamp the frame index to valid bounds
     const clampedIndex = Math.max(0, Math.min(frameIndex, imageFrames.length - 1));
     const image = imageFrames[clampedIndex];
 
@@ -38,15 +38,13 @@ export default function ParallaxCanvas({ imageFrames, frameCount }: ParallaxCanv
   }, [imageFrames, drawImageCover]);
 
   const handleScroll = useCallback(() => {
-    if (!imageFrames.length) return;
+    if (!enabled || !imageFrames.length) return;
     
     const scrollY = window.scrollY;
 
-    // The animation happens over a scroll distance of one screen height.
-    const animationStart = 0; // Start the animation from the very top.
+    const animationStart = 0;
     const animationDuration = window.innerHeight; 
     
-    // Calculate how far we are into the animation zone.
     const scrollFraction = Math.max(0, Math.min(1, (scrollY - animationStart) / animationDuration));
     
     const newFrameIndex = Math.floor(scrollFraction * (frameCount -1));
@@ -60,35 +58,39 @@ export default function ParallaxCanvas({ imageFrames, frameCount }: ParallaxCanv
         drawImage(frameIndexRef.current);
       });
     }
-  }, [imageFrames.length, drawImage, frameCount]);
+  }, [enabled, imageFrames.length, drawImage, frameCount]);
 
   const handleResize = useCallback(() => {
     const canvas = canvasRef.current;
     if (canvas) {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      handleScroll(); // Redraw based on current scroll after resize
+      drawImage(frameIndexRef.current);
     }
-  }, [handleScroll]);
+  }, [drawImage]);
 
   useEffect(() => {
     handleResize();
     window.addEventListener('resize', handleResize);
-    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    if (enabled) {
+      window.addEventListener('scroll', handleScroll, { passive: true });
+    }
 
-    // Initial draw
     if (imageFrames.length > 0) {
         drawImage(frameIndexRef.current);
     }
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      window.removeEventListener('scroll', handleScroll);
+      if (enabled) {
+        window.removeEventListener('scroll', handleScroll);
+      }
       if (animationFrameIdRef.current) {
         cancelAnimationFrame(animationFrameIdRef.current);
       }
     };
-  }, [handleResize, handleScroll, imageFrames]);
+  }, [handleResize, handleScroll, imageFrames, enabled]);
   
   return <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />;
 }

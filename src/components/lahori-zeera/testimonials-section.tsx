@@ -50,7 +50,11 @@ export default function TestimonialsSection() {
                 <Card className="h-full">
                   <CardContent className="flex flex-col items-center justify-center p-6 text-center">
                     <Avatar className="w-16 h-16 mb-4">
-                        <AvatarImage src={`https://api.dicebear.com/8.x/lorelei/svg?seed=${testimonial.name}`} />
+                        <AvatarImage 
+                          src={`https://api.dicebear.com/8.x/lorelei/svg?seed=${testimonial.name}`} 
+                          alt={`${testimonial.name}'s testimonial avatar`}
+                          loading="lazy"
+                        />
                         <AvatarFallback>{testimonial.name.charAt(0)}</AvatarFallback>
                     </Avatar>
                     <p className="text-muted-foreground mb-4">"{testimonial.quote}"</p>
