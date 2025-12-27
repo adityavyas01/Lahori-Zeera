@@ -5,15 +5,6 @@ import { Button } from "../ui/button";
 import Image from "next/image";
 
 export default function FlavorsSection() {
-    // A mid-point frame from the animation sequence
-    const getBottleImageUrl = (baseUrl: string, variantId: number) => {
-        let frame = '045';
-        if (variantId === 1) frame = '030'; // Zeera
-        if (variantId === 2) frame = '060'; // Nimboo
-        if (variantId === 3) frame = '090'; // Shikanji
-        return baseUrl.replace('frame_000', `frame_${frame}`);
-    }
-
     return (
         <SectionWrapper id="flavors" className="bg-secondary/20">
             <div className="text-center mb-12">
@@ -32,10 +23,11 @@ export default function FlavorsSection() {
                                     style={{ backgroundColor: variant.themeColor, opacity: 0.8 }}
                                 />
                                 <Image 
-                                    src={getBottleImageUrl(variant.baseImageUrl, variant.id)} 
+                                    src={variant.bottleImage} 
                                     alt={`Lahori ${variant.name} bottle`}
                                     fill
                                     className="object-contain drop-shadow-2xl transition-transform duration-500 group-hover:scale-110"
+                                    data-ai-hint={variant.bottleImageHint}
                                 />
                             </div>
                             <div className="absolute top-4 right-4 sm:top-2 sm:right-10 md:top-4 md:right-4 bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg -rotate-12">

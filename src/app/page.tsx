@@ -22,7 +22,6 @@ const FRAME_COUNT = 192;
 export default function Home() {
   const [currentVariantIndex, setCurrentVariantIndex] = useState(0);
   const [isInitialLoading, setIsInitialLoading] = useState(true);
-  const [loadingProgress, setLoadingProgress] = useState(0);
   const [isSwitching, setIsSwitching] = useState(false);
   const [imageFrames, setImageFrames] = useState<HTMLImageElement[]>([]);
   const [showContent, setShowContent] = useState(false);
@@ -38,10 +37,8 @@ export default function Home() {
 
   const preloadImages = useCallback(async (variantIndex: number) => {
     setIsSwitching(true);
-    setAreAllFramesLoaded(false);
-
-    const variant = variants[variantIndex];
     
+    const variant = variants[variantIndex];
     const firstFrameImg = new Image();
     firstFrameImg.src = getFrameUrl(variant, 0);
     
@@ -50,56 +47,40 @@ export default function Home() {
     });
 
     setCurrentVariantIndex(variantIndex);
-    setImageFrames([firstFrameImg]);
     
-    // Don't lazy load on mobile, we only need the first frame
-    if (isMobile) {
-      setAreAllFramesLoaded(true);
+    // Don't lazy load for desktop animation, handle it in initialLoad
+    if (!isMobile) {
+      // The initialLoad function already handles lazy loading all frames for desktop
+      // We just need to switch the index.
       setIsSwitching(false);
       return;
     }
-
-    // Lazy load remaining frames for desktop
-    const frameUrls = Array.from({ length: FRAME_COUNT - 1 }, (_, i) => getFrameUrl(variant, i + 1));
-    const loadedImages: HTMLImageElement[] = [firstFrameImg];
-
-    const promises = frameUrls.map(url => {
-      return new Promise<HTMLImageElement>((resolve, reject) => {
-        const img = new Image();
-        img.src = url;
-        img.onload = () => {
-          resolve(img);
-        };
-        img.onerror = reject;
-      });
-    });
-
-    const remainingImages = await Promise.all(promises);
-    loadedImages.push(...remainingImages);
-
-    loadedImages.sort((a, b) => {
-        const aFrame = parseInt(a.src.match(/frame_(\d{3})/)?.[1] || '0', 10);
-        const bFrame = parseInt(b.src.match(/frame_(\d{3})/)?.[1] || '0', 10);
-        return aFrame - bFrame;
-    });
-
-    setImageFrames(loadedImages);
-    setAreAllFramesLoaded(true);
+    
+    // For mobile, we just load the one hero image which is now in variants.ts
+    // The actual image is loaded by the MobileHero component.
     setIsSwitching(false);
+
   }, [isMobile]);
 
   const initialLoad = useCallback(async () => {
     setIsInitialLoading(true);
-    setLoadingProgress(0);
-    setAreAllFramesLoaded(false);
+    
+    // For mobile, we don't need the animation frames, just the hero image
+    if (isMobile) {
+        // Preload the first variant's hero image for mobile
+        const heroImg = new Image();
+        heroImg.src = variants[0].heroImage;
+        await new Promise(resolve => { heroImg.onload = resolve; });
+        
+        setIsInitialLoading(false);
+        setShowContent(true);
+        setAreAllFramesLoaded(true); // Not really, but enables content
+        return;
+    }
 
-    const variant = variants[0];
-    const frameUrls = Array.from({ length: FRAME_COUNT }, (_, i) => getFrameUrl(variant, i));
-    const loadedImages: HTMLImageElement[] = [];
-    let loadedCount = 0;
-
+    // For desktop, load the first frame of the first variant
     const firstFrameImg = new Image();
-    firstFrameImg.src = frameUrls[0];
+    firstFrameImg.src = getFrameUrl(variants[0], 0);
     await new Promise(resolve => {
       firstFrameImg.onload = resolve;
     });
@@ -108,57 +89,54 @@ export default function Home() {
     setIsInitialLoading(false);
     setTimeout(() => setShowContent(true), 500);
 
-    // Don't lazy load on mobile, we only need the first frame
-    if (isMobile) {
-      setAreAllFramesLoaded(true);
-      return;
-    }
-
-    // Lazy load remaining frames for desktop
-    const remainingFrameUrls = frameUrls.slice(1);
-    loadedImages.push(firstFrameImg);
-
-    const promises = remainingFrameUrls.map(url => {
-      return new Promise<HTMLImageElement>((resolve, reject) => {
-        const img = new Image();
-        img.src = url;
-        img.onload = () => {
-          loadedCount++;
-          setLoadingProgress(Math.round((loadedCount / (FRAME_COUNT -1)) * 100));
-          resolve(img);
-        };
-        img.onerror = reject;
-      });
+    // Then lazy-load ALL frames for ALL variants for seamless switching
+    const allFramePromises: Promise<HTMLImageElement>[] = [];
+    variants.forEach(variant => {
+        for (let i = 1; i < FRAME_COUNT; i++) {
+            const promise = new Promise<HTMLImageElement>((resolve, reject) => {
+                const img = new Image();
+                img.src = getFrameUrl(variant, i);
+                img.onload = () => resolve(img);
+                img.onerror = reject;
+            });
+            allFramePromises.push(promise);
+        }
     });
 
-    const remainingImages = await Promise.all(promises);
-    loadedImages.push(...remainingImages);
-
-    loadedImages.sort((a, b) => {
-        const aFrame = parseInt(a.src.match(/frame_(\d{3})/)?.[1] || '0', 10);
-        const bFrame = parseInt(b.src.match(/frame_(\d{3})/)?.[1] || '0', 10);
-        return aFrame - bFrame;
-    });
+    await Promise.all(allFramePromises);
     
-    setImageFrames(loadedImages);
+    // This sorting step is no longer necessary as we just need to know they're all loaded
     setAreAllFramesLoaded(true);
+
   }, [isMobile]);
 
 
   useEffect(() => {
     initialLoad();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [isMobile]); // Rerun if the user resizes across the mobile breakpoint
 
   const handleVariantChange = (newIndex: number) => {
     if (newIndex === currentVariantIndex || isSwitching) return;
-    preloadImages(newIndex);
+    
+    if (isMobile) {
+        setIsSwitching(true);
+        const nextVariant = variants[newIndex];
+        const heroImg = new Image();
+        heroImg.src = nextVariant.heroImage;
+        heroImg.onload = () => {
+            setCurrentVariantIndex(newIndex);
+            setIsSwitching(false);
+        }
+    } else {
+        preloadImages(newIndex);
+    }
   }
 
   const DesktopView = () => (
     <div className="relative h-[300vh]">
         <div className="sticky top-0 h-screen w-full overflow-hidden">
-            <ParallaxCanvas imageFrames={imageFrames} frameCount={FRAME_COUNT} enabled={areAllFramesLoaded} />
+            <ParallaxCanvas imageFrames={imageFrames} frameCount={FRAME_COUNT} enabled={areAllFramesLoaded} currentVariant={currentVariant}/>
             
             {isSwitching && (
                 <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm transition-opacity duration-500">
@@ -175,23 +153,25 @@ export default function Home() {
     </div>
   );
 
+  if (isMobile === undefined) {
+    return <Loader progress={100} />;
+  }
+
   return (
     <>
-      {isInitialLoading && <Loader progress={areAllFramesLoaded ? 100 : loadingProgress} />}
+      {isInitialLoading && <Loader progress={100} />}
       
       <main className={cn('bg-background min-h-screen', currentVariant.themeClass, (isInitialLoading || !showContent) ? "opacity-0" : "opacity-100 transition-opacity duration-1000")}>
         <Header />
         
-        {isMobile !== undefined && (
-          isMobile 
+        {isMobile 
             ? <MobileHero 
-                variant={currentVariant} 
-                firstFrame={imageFrames[0]} 
+                variant={currentVariant}
                 onSelectVariant={handleVariantChange} 
                 isSwitching={isSwitching}
               />
             : <DesktopView />
-        )}
+        }
 
         <div className={cn("relative z-10 bg-background", isMobile ? "" : "-mt-[100vh]")}>
             <AboutSection />

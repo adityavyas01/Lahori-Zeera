@@ -7,12 +7,11 @@ import { AnimatePresence, motion } from "framer-motion";
 
 type MobileHeroProps = {
     variant: Variant;
-    firstFrame: HTMLImageElement | undefined;
     onSelectVariant: (index: number) => void;
     isSwitching: boolean;
 };
 
-export default function MobileHero({ variant, firstFrame, onSelectVariant, isSwitching }: MobileHeroProps) {
+export default function MobileHero({ variant, onSelectVariant, isSwitching }: MobileHeroProps) {
 
     return (
         <div className="relative w-full h-screen flex flex-col overflow-hidden">
@@ -27,15 +26,14 @@ export default function MobileHero({ variant, firstFrame, onSelectVariant, isSwi
                     exit={{ opacity: 0, scale: 0.9 }}
                     transition={{ duration: 0.8, ease: 'easeInOut' }}
                 >
-                    {firstFrame && (
-                        <Image
-                            src={firstFrame.src}
-                            alt={`${variant.name} bottle`}
-                            fill
-                            className="object-contain object-bottom"
-                            priority
-                        />
-                    )}
+                    <Image
+                        src={variant.heroImage}
+                        alt={`${variant.name} bottle splash`}
+                        fill
+                        className="object-cover"
+                        priority
+                        data-ai-hint={variant.heroImageHint}
+                    />
                 </motion.div>
             </AnimatePresence>
 

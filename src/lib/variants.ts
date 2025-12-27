@@ -6,6 +6,10 @@ export type Variant = {
   themeColor: string;
   themeClass: string;
   baseImageUrl: string;
+  bottleImage: string;
+  bottleImageHint: string;
+  heroImage: string;
+  heroImageHint: string;
 };
 
 export const variants: Variant[] = [
@@ -17,6 +21,10 @@ export const variants: Variant[] = [
     themeColor: "#76AB3B",
     themeClass: "theme-zeera",
     baseImageUrl: "https://cpqpdylzdipzwmtwvknx.supabase.co/storage/v1/object/public/Zeera/frame_000_delay-0.04s.webp",
+    bottleImage: "https://picsum.photos/seed/1/600/800",
+    bottleImageHint: "product shot",
+    heroImage: "https://picsum.photos/seed/10/1080/1920",
+    heroImageHint: "drink splash",
   },
   {
     id: 2,
@@ -26,6 +34,10 @@ export const variants: Variant[] = [
     themeColor: "#F4D03F",
     themeClass: "theme-nimboo",
     baseImageUrl: "https://cpqpdylzdipzwmtwvknx.supabase.co/storage/v1/object/public/Nimboo/frame_000_delay-0.04s.webp",
+    bottleImage: "https://picsum.photos/seed/2/600/800",
+    bottleImageHint: "product shot",
+    heroImage: "https://picsum.photos/seed/20/1080/1920",
+    heroImageHint: "lemon splash",
   },
   {
     id: 3,
@@ -35,5 +47,9 @@ export const variants: Variant[] = [
     themeColor: "#2ECC71",
     themeClass: "theme-shikanji",
     baseImageUrl: "https://cpqpdylzdipzwmtwvknx.supabase.co/storage/v1/object/public/Shikanji/frame_000_delay-0.04s.webp",
+    bottleImage: "https://picsum.photos/seed/3/600/800",
+    bottleImageHint: "product shot",
+    heroImage: "https://picsum.photos/seed/30/1080/1920",
+    heroImageHint: "mint splash",
   },
 ];
