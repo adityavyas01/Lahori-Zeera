@@ -13,6 +13,7 @@ import IngredientsSection from '@/components/lahori-zeera/ingredients-section';
 import TestimonialsSection from '@/components/lahori-zeera/testimonials-section';
 import FaqSection from '@/components/lahori-zeera/faq-section';
 import Footer from '@/components/lahori-zeera/footer';
+import Header from '@/components/lahori-zeera/header';
 
 const FRAME_COUNT = 192;
 
@@ -86,34 +87,32 @@ export default function Home() {
     setCurrentVariantIndex(prevIndex);
     preloadImages(prevIndex, false);
   };
-  
-  const ParallaxSection = () => (
-    <>
-      <div className="h-[200vh]" />
-        <div className="sticky top-0 h-screen w-screen overflow-hidden">
-        <ParallaxCanvas imageFrames={imageFrames} />
-        
-        {isSwitching && (
-            <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm transition-opacity duration-500">
-                <p className="text-2xl font-headline tracking-widest text-white animate-pulse">Mixing...</p>
-            </div>
-        )}
-
-        <div className="absolute inset-0 z-20 grid grid-cols-5 p-8 md:p-12 lg:p-16">
-          <TextOverlay variant={currentVariant} isSwitching={isSwitching} />
-          <div className="col-span-1" />
-          <VariantNav onNext={handleNext} onPrev={handlePrev} currentIndex={currentVariantIndex} />
-        </div>
-      </div>
-    </>
-  );
 
   return (
     <main className={cn('bg-background min-h-screen', currentVariant.themeClass)}>
       {isInitialLoading && <Loader progress={loadingProgress} />}
       
       <div className={cn("transition-opacity duration-1000", showContent ? "opacity-100" : "opacity-0")}>
-        <ParallaxSection />
+        <Header />
+        
+        <div className="relative h-[200vh]">
+            <div className="sticky top-0 h-screen w-screen overflow-hidden">
+                <ParallaxCanvas imageFrames={imageFrames} />
+                
+                {isSwitching && (
+                    <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm transition-opacity duration-500">
+                        <p className="text-2xl font-headline tracking-widest text-white animate-pulse">Mixing...</p>
+                    </div>
+                )}
+
+                <div className="absolute inset-0 z-20 grid grid-cols-5 p-8 md:p-12 lg:p-16">
+                    <TextOverlay variant={currentVariant} isSwitching={isSwitching} />
+                    <div className="col-span-1" />
+                    <VariantNav onNext={handleNext} onPrev={handlePrev} currentIndex={currentVariantIndex} />
+                </div>
+            </div>
+        </div>
+
         <div className="relative z-10 bg-background">
             <AboutSection />
             <FlavorsSection />
