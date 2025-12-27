@@ -109,20 +109,19 @@ export default function Home() {
   }, [isMobile]);
 
   useEffect(() => {
-    preloadImages(currentVariantIndex, true);
-  }, [preloadImages, currentVariantIndex]);
+    preloadImages(0, true);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleVariantChange = (newIndex: number) => {
-    if (newIndex === currentVariantIndex) return;
+    if (newIndex === currentVariantIndex || isSwitching) return;
     setCurrentVariantIndex(newIndex);
-    if (!isMobile) {
-      preloadImages(newIndex, false);
-    }
+    preloadImages(newIndex, false);
   }
 
   const DesktopView = () => (
     <div className="relative h-[300vh]">
-        <div className="sticky top-0 h-screen w-screen overflow-hidden">
+        <div className="sticky top-0 h-screen w-full overflow-hidden">
             <ParallaxCanvas imageFrames={imageFrames} frameCount={FRAME_COUNT} enabled={areAllFramesLoaded} />
             
             {isSwitching && (
