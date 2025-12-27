@@ -15,15 +15,14 @@ export default function TextOverlay({ variant, isSwitching }: TextOverlayProps) 
       <div
         className={cn(
           "space-y-2 sm:space-y-4 md:space-y-6 transition-opacity duration-500 relative z-10 @container/text p-6 rounded-xl",
-          "bg-black/20 backdrop-blur-sm",
           isSwitching ? 'opacity-0' : 'opacity-100'
         )}
-        style={{ textShadow: '2px 2px 8px rgba(0,0,0,0.5)' }}
+        style={{ textShadow: '0 2px 15px rgba(0,0,0,0.5)' }}
       >
         <h1 className="font-headline text-5xl @[300px]:text-7xl @md:text-8xl @lg:text-9xl font-bold uppercase tracking-tighter text-white">
           {variant.name}
         </h1>
-        <p className="font-body text-base @sm:text-lg @md:text-xl font-bold uppercase tracking-widest text-primary">
+        <p className="font-body text-base @sm:text-lg @md:text-xl font-bold uppercase tracking-widest" style={{ color: variant.themeColor}}>
           {variant.subtitle}
         </p>
         <p className="font-body text-sm @sm:text-base @md:text-lg max-w-md text-balance text-white/90 mx-auto md:mx-0">
