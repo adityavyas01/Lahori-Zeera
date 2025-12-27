@@ -7,14 +7,15 @@ import { cn } from "@/lib/utils";
 type TextOverlayProps = {
   variant: Variant;
   isSwitching: boolean;
+  className?: string;
 };
 
-export default function TextOverlay({ variant, isSwitching }: TextOverlayProps) {
+export default function TextOverlay({ variant, isSwitching, className }: TextOverlayProps) {
   return (
-    <div className="flex-grow md:col-span-3 flex flex-col justify-center h-full relative text-center md:text-left p-4 sm:p-6">
+    <div className={cn("flex-grow md:col-span-3 flex flex-col justify-center h-full relative text-center md:text-left p-4 sm:p-6", className)}>
       <div
         className={cn(
-          "space-y-2 sm:space-y-4 md:space-y-6 transition-opacity duration-500 relative z-10 @container/text",
+          "space-y-2 sm:space-y-4 md:space-y-6 transition-opacity duration-500 relative z-10 @container",
           isSwitching ? 'opacity-0' : 'opacity-100'
         )}
         style={{ 
