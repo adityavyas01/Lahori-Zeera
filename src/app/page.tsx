@@ -7,6 +7,12 @@ import Loader from '@/components/lahori-zeera/loader';
 import ParallaxCanvas from '@/components/lahori-zeera/parallax-canvas';
 import TextOverlay from '@/components/lahori-zeera/text-overlay';
 import VariantNav from '@/components/lahori-zeera/variant-nav';
+import AboutSection from '@/components/lahori-zeera/about-section';
+import FlavorsSection from '@/components/lahori-zeera/flavors-section';
+import IngredientsSection from '@/components/lahori-zeera/ingredients-section';
+import TestimonialsSection from '@/components/lahori-zeera/testimonials-section';
+import FaqSection from '@/components/lahori-zeera/faq-section';
+import Footer from '@/components/lahori-zeera/footer';
 
 const FRAME_COUNT = 192;
 
@@ -16,6 +22,7 @@ export default function Home() {
   const [loadingProgress, setLoadingProgress] = useState(0);
   const [isSwitching, setIsSwitching] = useState(false);
   const [imageFrames, setImageFrames] = useState<HTMLImageElement[]>([]);
+  const [showContent, setShowContent] = useState(false);
 
   const currentVariant = useMemo(() => variants[currentVariantIndex], [currentVariantIndex]);
 
@@ -58,6 +65,7 @@ export default function Home() {
 
     if (isInitial) {
       setIsInitialLoading(false);
+      setTimeout(() => setShowContent(true), 500); // Fade in content after loader
     } else {
       setIsSwitching(false);
     }
@@ -78,31 +86,43 @@ export default function Home() {
     setCurrentVariantIndex(prevIndex);
     preloadImages(prevIndex, false);
   };
+  
+  const ParallaxSection = () => (
+    <>
+      <div className="h-[200vh]" />
+        <div className="sticky top-0 h-screen w-screen overflow-hidden">
+        <ParallaxCanvas imageFrames={imageFrames} />
+        
+        {isSwitching && (
+            <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm transition-opacity duration-500">
+                <p className="text-2xl font-headline tracking-widest text-white animate-pulse">Mixing...</p>
+            </div>
+        )}
+
+        <div className="absolute inset-0 z-20 grid grid-cols-5 p-8 md:p-12 lg:p-16">
+          <TextOverlay variant={currentVariant} isSwitching={isSwitching} />
+          <div className="col-span-1" />
+          <VariantNav onNext={handleNext} onPrev={handlePrev} currentIndex={currentVariantIndex} />
+        </div>
+      </div>
+    </>
+  );
 
   return (
     <main className={cn('bg-background min-h-screen', currentVariant.themeClass)}>
-      {isInitialLoading ? (
-        <Loader progress={loadingProgress} />
-      ) : (
-        <>
-          <div className="h-[300vh] w-full" />
-          <div className="fixed inset-0 h-screen w-screen overflow-hidden">
-            <ParallaxCanvas imageFrames={imageFrames} />
-            
-            {isSwitching && (
-                <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm transition-opacity duration-500">
-                    <p className="text-2xl font-headline tracking-widest text-white animate-pulse">Mixing...</p>
-                </div>
-            )}
-
-            <div className="absolute inset-0 z-20 grid grid-cols-5 p-8 md:p-12 lg:p-16">
-              <TextOverlay variant={currentVariant} isSwitching={isSwitching} />
-              <div className="col-span-1" />
-              <VariantNav onNext={handleNext} onPrev={handlePrev} currentIndex={currentVariantIndex} />
-            </div>
-          </div>
-        </>
-      )}
+      {isInitialLoading && <Loader progress={loadingProgress} />}
+      
+      <div className={cn("transition-opacity duration-1000", showContent ? "opacity-100" : "opacity-0")}>
+        <ParallaxSection />
+        <div className="relative z-10 bg-background">
+            <AboutSection />
+            <FlavorsSection />
+            <IngredientsSection />
+            <TestimonialsSection />
+            <FaqSection />
+            <Footer />
+        </div>
+      </div>
     </main>
   );
 }

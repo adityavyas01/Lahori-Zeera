@@ -1,3 +1,28 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "cumin-seeds",
+      "description": "Macro shot of cumin seeds on a dark surface.",
+      "imageUrl": "https://images.unsplash.com/photo-1701189975842-591ebd1e26a2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwyfHxjdW1pbiUyMHNlZWRzfGVufDB8fHx8MTc2NjgyNTMzOXww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "cumin seeds"
+    },
+    {
+      "id": "black-salt",
+      "description": "Crystals of black salt on a dark background.",
+      "imageUrl": "https://images.unsplash.com/photo-1676946632132-131537d57a9d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxzYWx0JTIwY3J5c3RhbHxlbnwwfHx8fDE3NjY4MjUzMzl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "salt crystal"
+    },
+    {
+      "id": "lemon",
+      "description": "A slice of lemon with water droplets.",
+      "imageUrl": "https://images.unsplash.com/photo-1628573255381-e1b7712b5ba0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwzfHxsZW1vbiUyMHNsaWNlfGVufDB8fHx8MTc2NjgyNTMzOHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "lemon slice"
+    },
+    {
+      "id": "spices",
+      "description": "A blend of pepper and ginger.",
+      "imageUrl": "https://images.unsplash.com/photo-1509358271058-acd22cc93898?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw2fHxzcGljZXN8ZW58MHx8fHwxNzY2ODI1MzM5fDA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "spices"
+    }
+  ]
 }

@@ -26,17 +26,23 @@ export default function ParallaxCanvas({ imageFrames }: ParallaxCanvasProps) {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext('2d');
     const image = imageFrames[frameIndex];
-    if (ctx && image) {
+    if (ctx && image && image.complete) {
       drawImageCover(ctx, image);
     }
   }, [imageFrames, drawImageCover]);
 
   const handleScroll = useCallback(() => {
     if (!imageFrames.length) return;
-
+    
+    // We only want this scroll effect for the first part of the page.
+    // Let's say the parallax section is 200vh tall.
+    const parallaxHeight = window.innerHeight * 2;
     const scrollY = window.scrollY;
-    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-    const scrollFraction = maxScroll > 0 ? scrollY / maxScroll : 0;
+
+    if (scrollY > parallaxHeight) return;
+
+    const scrollFraction = Math.min(1, scrollY / (parallaxHeight - window.innerHeight));
+    
     const newFrameIndex = Math.min(
       imageFrames.length - 1,
       Math.floor(scrollFraction * imageFrames.length)
@@ -65,9 +71,8 @@ export default function ParallaxCanvas({ imageFrames }: ParallaxCanvasProps) {
   useEffect(() => {
     handleResize();
     window.addEventListener('resize', handleResize);
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
-    // Initial draw
     if (imageFrames.length > 0) {
         drawImage(0);
         frameIndexRef.current = 0;
