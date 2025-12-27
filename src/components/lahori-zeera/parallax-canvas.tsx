@@ -4,9 +4,10 @@ import { useEffect, useRef, useCallback } from 'react';
 
 type ParallaxCanvasProps = {
   imageFrames: HTMLImageElement[];
+  frameCount: number;
 };
 
-export default function ParallaxCanvas({ imageFrames }: ParallaxCanvasProps) {
+export default function ParallaxCanvas({ imageFrames, frameCount }: ParallaxCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const frameIndexRef = useRef(0);
   const animationFrameIdRef = useRef<number>();
@@ -25,8 +26,13 @@ export default function ParallaxCanvas({ imageFrames }: ParallaxCanvasProps) {
   const drawImage = useCallback((frameIndex: number) => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext('2d');
-    const image = imageFrames[frameIndex];
-    if (ctx && image && image.complete) {
+    if (!ctx || imageFrames.length === 0) return;
+    
+    // Clamp the frame index to valid bounds
+    const clampedIndex = Math.max(0, Math.min(frameIndex, imageFrames.length - 1));
+    const image = imageFrames[clampedIndex];
+
+    if (image && image.complete) {
       drawImageCover(ctx, image);
     }
   }, [imageFrames, drawImageCover]);
@@ -34,24 +40,16 @@ export default function ParallaxCanvas({ imageFrames }: ParallaxCanvasProps) {
   const handleScroll = useCallback(() => {
     if (!imageFrames.length) return;
     
-    // The parallax section is 300vh tall.
-    const parallaxHeight = window.innerHeight * 3;
     const scrollY = window.scrollY;
 
-    if (scrollY > parallaxHeight) return;
-
-    // The animation should happen over the middle 100vh of the 300vh scroll.
-    // It starts after scrolling 100vh and ends after scrolling 200vh.
+    // The animation happens between 100vh and 200vh of scroll.
     const animationStart = window.innerHeight;
-    const animationEnd = window.innerHeight * 2;
-    const animationDuration = animationEnd - animationStart;
-
+    const animationDuration = window.innerHeight; // The animation lasts for 1 full screen height of scroll.
+    
+    // Calculate how far we are into the animation zone.
     const scrollFraction = Math.max(0, Math.min(1, (scrollY - animationStart) / animationDuration));
     
-    const newFrameIndex = Math.min(
-      imageFrames.length - 1,
-      Math.floor(scrollFraction * imageFrames.length)
-    );
+    const newFrameIndex = Math.floor(scrollFraction * (frameCount -1));
 
     if (newFrameIndex !== frameIndexRef.current) {
       frameIndexRef.current = newFrameIndex;
@@ -62,25 +60,25 @@ export default function ParallaxCanvas({ imageFrames }: ParallaxCanvasProps) {
         drawImage(frameIndexRef.current);
       });
     }
-  }, [imageFrames.length, drawImage]);
+  }, [imageFrames.length, drawImage, frameCount]);
 
   const handleResize = useCallback(() => {
     const canvas = canvasRef.current;
     if (canvas) {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      drawImage(frameIndexRef.current);
+      handleScroll(); // Redraw based on current scroll after resize
     }
-  }, [drawImage]);
+  }, [handleScroll]);
 
   useEffect(() => {
     handleResize();
     window.addEventListener('resize', handleResize);
     window.addEventListener('scroll', handleScroll, { passive: true });
 
+    // Initial draw
     if (imageFrames.length > 0) {
-        drawImage(0);
-        frameIndexRef.current = 0;
+        drawImage(frameIndexRef.current);
     }
 
     return () => {

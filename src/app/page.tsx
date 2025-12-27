@@ -97,7 +97,7 @@ export default function Home() {
         
         <div className="relative h-[300vh]">
             <div className="sticky top-0 h-screen w-screen overflow-hidden">
-                <ParallaxCanvas imageFrames={imageFrames} />
+                <ParallaxCanvas imageFrames={imageFrames} frameCount={FRAME_COUNT}/>
                 
                 {isSwitching && (
                     <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm transition-opacity duration-500">
