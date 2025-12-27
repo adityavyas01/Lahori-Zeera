@@ -11,10 +11,11 @@ type TextOverlayProps = {
 
 export default function TextOverlay({ variant, isSwitching }: TextOverlayProps) {
   return (
-    <div className="col-span-5 md:col-span-3 flex flex-col justify-center h-full">
+    <div className="col-span-5 md:col-span-3 flex flex-col justify-center h-full relative">
+       <div className="absolute inset-0 -left-16 -right-16 bg-gradient-to-r from-black/70 via-black/50 to-transparent" />
       <div
         className={cn(
-          "space-y-4 md:space-y-6 transition-opacity duration-500",
+          "space-y-4 md:space-y-6 transition-opacity duration-500 relative z-10",
           isSwitching ? 'opacity-0' : 'opacity-100'
         )}
       >
@@ -24,7 +25,7 @@ export default function TextOverlay({ variant, isSwitching }: TextOverlayProps) 
         <p className="font-body text-lg md:text-xl font-bold uppercase tracking-widest text-primary">
           {variant.subtitle}
         </p>
-        <p className="font-body text-base md:text-lg max-w-md text-balance text-muted-foreground">
+        <p className="font-body text-base md:text-lg max-w-md text-balance text-white/80">
           {variant.description}
         </p>
         <div className="flex items-center gap-4 pt-4">
