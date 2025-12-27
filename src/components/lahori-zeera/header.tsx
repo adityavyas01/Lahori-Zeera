@@ -8,6 +8,7 @@ import {
   Sheet,
   SheetContent,
   SheetTrigger,
+  SheetTitle,
 } from "@/components/ui/sheet"
 
 
@@ -39,7 +40,7 @@ export default function Header() {
                     key={link.href}
                     href={link.href}
                     onClick={() => setIsMenuOpen(false)}
-                    className="font-body text-sm font-bold uppercase tracking-wider transition-colors hover:text-primary"
+                    className="font-body text-sm font-bold uppercase tracking-wider transition-all duration-300 ease-in-out hover:text-primary"
                 >
                     {link.label}
                 </a>
@@ -74,6 +75,7 @@ export default function Header() {
                             </Button>
                         </SheetTrigger>
                         <SheetContent side="right" className="w-[250px] bg-background">
+                            <SheetTitle className="sr-only">Main Menu</SheetTitle>
                             <nav className="flex flex-col items-start gap-6 p-6 pt-20">
                                 <NavContent />
                             </nav>
