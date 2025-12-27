@@ -73,9 +73,9 @@ export default function Header() {
                         <AnimatePresence>
                             <motion.span
                                 key={animatedWordIndex}
-                                initial={{ y: '100%', opacity: 0 }}
+                                initial={{ y: '-100%', opacity: 0 }}
                                 animate={{ y: '0%', opacity: 1 }}
-                                exit={{ y: '-100%', opacity: 0 }}
+                                exit={{ y: '100%', opacity: 0 }}
                                 transition={{ duration: 0.5, ease: 'easeInOut' }}
                                 className="absolute inset-0 flex items-center justify-start"
                                 style={{ color: variants[animatedWordIndex].themeColor }}
