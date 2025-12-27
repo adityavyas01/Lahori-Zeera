@@ -1,6 +1,6 @@
 'use client';
 import Image from "next/image";
-import { type Variant } from "@/lib/variants";
+import { type Variant, variants } from "@/lib/variants";
 import TextOverlay from "./text-overlay";
 import FlavorSelector from "./flavor-selector";
 import { AnimatePresence, motion } from "framer-motion";
