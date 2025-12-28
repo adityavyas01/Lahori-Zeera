@@ -2,6 +2,7 @@ import type {Metadata} from 'next';
 import './globals.css';
 import { cn } from '@/lib/utils';
 import { Toaster } from '@/components/ui/toaster';
+import ScrollToTop from '@/components/lahori-zeera/scroll-to-top';
 
 export const metadata: Metadata = {
   title: 'Lahori Zeera Parallax',
@@ -21,6 +22,7 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=PT+Sans:wght@400;700&display=swap" rel="stylesheet" />
       </head>
       <body className={cn('font-body antialiased bg-background overflow-x-hidden')}>
+        <ScrollToTop />
         {children}
         <Toaster />
       </body>

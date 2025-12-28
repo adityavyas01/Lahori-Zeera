@@ -135,7 +135,7 @@ export default function Home() {
 
   const DesktopView = () => (
     <>
-      <div className="relative h-[300vh] snap-start">
+      <div className="relative h-[200vh] snap-start">
           <div className="sticky top-0 h-screen w-full overflow-hidden">
               <ParallaxCanvas imageFrames={imageFrames} frameCount={FRAME_COUNT} enabled={areAllFramesLoaded} currentVariant={currentVariant}/>
               
