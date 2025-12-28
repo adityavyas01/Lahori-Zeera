@@ -1,5 +1,4 @@
 'use client';
-import Image from "next/image";
 import { type Variant, variants } from "@/lib/variants";
 import TextOverlay from "./text-overlay";
 import FlavorSelector from "./flavor-selector";
@@ -15,26 +14,18 @@ export default function MobileHero({ variant, onSelectVariant, isSwitching }: Mo
 
     return (
         <div className="relative w-full h-screen flex flex-col overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/50 to-background" />
+            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/30 to-background" />
 
             <AnimatePresence mode="wait">
                 <motion.div
                     key={variant.id}
                     className="absolute inset-0 w-full h-full"
-                    initial={{ opacity: 0, scale: 1.1 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
+                    style={{ backgroundColor: variant.themeColor }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
                     transition={{ duration: 0.8, ease: 'easeInOut' }}
-                >
-                    <Image
-                        src={variant.heroImage}
-                        alt={`${variant.name} bottle splash`}
-                        fill
-                        className="object-cover"
-                        priority
-                        data-ai-hint={variant.heroImageHint}
-                    />
-                </motion.div>
+                />
             </AnimatePresence>
 
 

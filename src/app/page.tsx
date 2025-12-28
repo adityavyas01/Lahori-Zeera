@@ -48,16 +48,11 @@ export default function Home() {
 
     setCurrentVariantIndex(variantIndex);
     
-    // Don't lazy load for desktop animation, handle it in initialLoad
     if (!isMobile) {
-      // The initialLoad function already handles lazy loading all frames for desktop
-      // We just need to switch the index.
       setIsSwitching(false);
       return;
     }
     
-    // For mobile, we just load the one hero image which is now in variants.ts
-    // The actual image is loaded by the MobileHero component.
     setIsSwitching(false);
 
   }, [isMobile]);
@@ -65,20 +60,13 @@ export default function Home() {
   const initialLoad = useCallback(async () => {
     setIsInitialLoading(true);
     
-    // For mobile, we don't need the animation frames, just the hero image
     if (isMobile) {
-        // Preload the first variant's hero image for mobile
-        const heroImg = new Image();
-        heroImg.src = variants[0].heroImage;
-        await new Promise(resolve => { heroImg.onload = resolve; });
-        
         setIsInitialLoading(false);
         setShowContent(true);
-        setAreAllFramesLoaded(true); // Not really, but enables content
+        setAreAllFramesLoaded(true); 
         return;
     }
 
-    // For desktop, load the first frame of the first variant
     const firstFrameImg = new Image();
     firstFrameImg.src = getFrameUrl(variants[0], 0);
     await new Promise(resolve => {
@@ -89,7 +77,6 @@ export default function Home() {
     setIsInitialLoading(false);
     setTimeout(() => setShowContent(true), 500);
 
-    // Then lazy-load ALL frames for ALL variants for seamless switching
     const allFramePromises: Promise<HTMLImageElement>[] = [];
     variants.forEach(variant => {
         for (let i = 1; i < FRAME_COUNT; i++) {
@@ -105,7 +92,6 @@ export default function Home() {
 
     await Promise.all(allFramePromises);
     
-    // This sorting step is no longer necessary as we just need to know they're all loaded
     setAreAllFramesLoaded(true);
 
   }, [isMobile]);
@@ -114,20 +100,17 @@ export default function Home() {
   useEffect(() => {
     initialLoad();
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isMobile]); // Rerun if the user resizes across the mobile breakpoint
+  }, [isMobile]);
 
   const handleVariantChange = (newIndex: number) => {
     if (newIndex === currentVariantIndex || isSwitching) return;
     
     if (isMobile) {
         setIsSwitching(true);
-        const nextVariant = variants[newIndex];
-        const heroImg = new Image();
-        heroImg.src = nextVariant.heroImage;
-        heroImg.onload = () => {
-            setCurrentVariantIndex(newIndex);
-            setIsSwitching(false);
-        }
+        // Simply update the index, the background color will transition in MobileHero
+        setCurrentVariantIndex(newIndex);
+        // Add a small delay to simulate loading/switching
+        setTimeout(() => setIsSwitching(false), 500);
     } else {
         preloadImages(newIndex);
     }
