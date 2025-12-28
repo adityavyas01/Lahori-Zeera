@@ -15,7 +15,14 @@ export default function SectionWrapper({ children, id, className }: SectionWrapp
   const isInView = useInView(ref, { once: true, amount: 0.2 });
 
   return (
-    <section id={id} className={cn("w-full py-20 md:py-28 lg:py-32", className)}>
+    <section 
+      id={id} 
+      className={cn(
+        "w-full h-screen flex flex-col justify-center snap-start snap-always",
+        "py-20 md:py-28 lg:py-32",
+        className
+      )}
+    >
       <motion.div
         ref={ref}
         className="container mx-auto px-4 md:px-6"

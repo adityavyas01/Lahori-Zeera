@@ -134,23 +134,33 @@ export default function Home() {
   }
 
   const DesktopView = () => (
-    <div className="relative h-[300vh]">
-        <div className="sticky top-0 h-screen w-full overflow-hidden">
-            <ParallaxCanvas imageFrames={imageFrames} frameCount={FRAME_COUNT} enabled={areAllFramesLoaded} currentVariant={currentVariant}/>
-            
-            {isSwitching && (
-                <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm transition-opacity duration-500">
-                    <p className="text-2xl font-headline tracking-widest text-white animate-pulse">Mixing...</p>
-                </div>
-            )}
+    <>
+      <div className="relative h-[300vh] snap-start">
+          <div className="sticky top-0 h-screen w-full overflow-hidden">
+              <ParallaxCanvas imageFrames={imageFrames} frameCount={FRAME_COUNT} enabled={areAllFramesLoaded} currentVariant={currentVariant}/>
+              
+              {isSwitching && (
+                  <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm transition-opacity duration-500">
+                      <p className="text-2xl font-headline tracking-widest text-white animate-pulse">Mixing...</p>
+                  </div>
+              )}
 
-            <div className="absolute inset-0 z-20 grid grid-cols-5 p-8 md:p-12 lg:p-16">
-                <TextOverlay variant={currentVariant} isSwitching={isSwitching} />
-                <div className="col-span-1" />
-                <FlavorSelector onSelect={handleVariantChange} currentIndex={currentVariantIndex} />
-            </div>
-        </div>
-    </div>
+              <div className="absolute inset-0 z-20 grid grid-cols-5 p-8 md:p-12 lg:p-16">
+                  <TextOverlay variant={currentVariant} isSwitching={isSwitching} />
+                  <div className="col-span-1" />
+                  <FlavorSelector onSelect={handleVariantChange} currentIndex={currentVariantIndex} />
+              </div>
+          </div>
+      </div>
+      <div className="relative z-10 bg-background">
+          <AboutSection />
+          <FlavorsSection />
+          <IngredientsSection />
+          <TestimonialsSection />
+          <FaqSection />
+          <Footer />
+      </div>
+    </>
   );
 
   if (isMobile === undefined) {
@@ -173,14 +183,6 @@ export default function Home() {
             : <DesktopView />
         }
 
-        <div className={cn("relative z-10 bg-background", isMobile ? "" : "-mt-[100vh]")}>
-            <AboutSection />
-            <FlavorsSection />
-            <IngredientsSection />
-            <TestimonialsSection />
-            <FaqSection />
-            <Footer />
-        </div>
       </main>
     </>
   );

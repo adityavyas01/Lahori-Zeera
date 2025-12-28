@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { variants } from '@/lib/variants';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
+import SectionWrapper from './section-wrapper';
 
 export default function FlavorsSection() {
   const containerVariants = {
@@ -25,7 +26,7 @@ export default function FlavorsSection() {
     visible: {
       scaleY: 1,
       transition: {
-        duration: 0.8,
+        duration: 1,
         ease: [0.6, 0.01, -0.05, 0.95],
       },
     },
@@ -45,9 +46,8 @@ export default function FlavorsSection() {
   };
 
   return (
-    <section id="flavors" className="w-full overflow-hidden bg-background">
-      <div className="container mx-auto px-4 md:px-6 py-20 md:py-28 lg:py-32">
-        <div className="text-center mb-16">
+    <SectionWrapper id="flavors" className="p-0 h-screen flex flex-col">
+      <div className="text-center pt-16 pb-8 md:pt-24 md:pb-12">
             <h2 className="font-headline text-4xl sm:text-5xl md:text-6xl font-bold text-foreground">
             Blockbuster Cast
             </h2>
@@ -55,11 +55,10 @@ export default function FlavorsSection() {
             Every flavour is a star, ek bhee nahi miss karna yaar, be it Zeera,
             Shikanji or Nimboo, peeyo inhe baar baar !
             </p>
-        </div>
       </div>
       
       <motion.div
-        className="relative grid grid-cols-1 md:grid-cols-3 w-full"
+        className="relative grid grid-cols-1 md:grid-cols-3 w-full flex-grow"
         variants={containerVariants}
         initial="hidden"
         whileInView="visible"
@@ -74,7 +73,7 @@ export default function FlavorsSection() {
             />
 
             <motion.div
-              className="relative z-10 flex flex-col items-center justify-between w-full h-full p-8 text-center min-h-[80vh]"
+              className="relative z-10 flex flex-col items-center justify-between w-full h-full p-8 text-center"
               variants={contentVariants}
             >
               <div className="w-full flex-grow flex items-center justify-center">
@@ -110,6 +109,6 @@ export default function FlavorsSection() {
           </div>
         ))}
       </motion.div>
-    </section>
+    </SectionWrapper>
   );
 }
