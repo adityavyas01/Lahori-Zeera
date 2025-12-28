@@ -22,7 +22,7 @@ const brandPillars = [
 
 export default function AboutSection() {
   return (
-    <SectionWrapper id="about">
+    <SectionWrapper id="about" className="py-24 sm:py-32">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
         <div className="space-y-6 text-center lg:text-left">
           <p className="font-headline text-lg text-primary tracking-widest uppercase">The Blockbuster Cast</p>

@@ -7,7 +7,7 @@ const footerLinks = ["Home", "Shop", "About Us", "Contact", "Terms of Service", 
 export default function Footer() {
   return (
     <footer className="bg-secondary/20">
-      <SectionWrapper id="contact">
+      <SectionWrapper id="contact" className="min-h-0 h-auto py-20 md:py-28 lg:py-32">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
           <div className="lg:col-span-1 space-y-4 text-center md:text-left">
             <h3 className="font-headline text-3xl font-bold text-foreground">Let's Connect.</h3>

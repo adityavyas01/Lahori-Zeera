@@ -10,9 +10,7 @@ export default function FlavorsSection() {
   const containerVariants = {
     hidden: {},
     visible: {
-      transition: {
-        // No more stagger
-      },
+      transition: {},
     },
   };
 
@@ -44,7 +42,7 @@ export default function FlavorsSection() {
   };
 
   return (
-    <section id="flavors" className="p-0 h-screen flex flex-col snap-start snap-always">
+    <section id="flavors" className="p-0 md:h-screen flex flex-col snap-start snap-always">
       <div className="text-center pt-16 pb-8 md:pt-24 md:pb-12 bg-background">
             <h2 className="font-headline text-4xl sm:text-5xl md:text-6xl font-bold text-foreground">
             Blockbuster Cast
@@ -63,7 +61,7 @@ export default function FlavorsSection() {
         viewport={{ once: true, amount: 0.2 }}
       >
         {variants.map((variant) => (
-          <div key={variant.id} className="relative flex flex-col overflow-hidden group">
+          <div key={variant.id} className="relative flex flex-col overflow-hidden group min-h-[80vh] md:min-h-0">
             <motion.div
               className="absolute inset-0 w-full h-full"
               style={{ backgroundColor: variant.themeColor }}

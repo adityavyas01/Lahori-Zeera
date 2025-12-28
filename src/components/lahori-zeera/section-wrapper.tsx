@@ -18,8 +18,8 @@ export default function SectionWrapper({ children, id, className }: SectionWrapp
     <section 
       id={id} 
       className={cn(
-        "w-full h-screen flex flex-col justify-center snap-start snap-always",
-        "py-20 md:py-28 lg:py-32",
+        "w-full flex flex-col justify-center snap-start snap-always",
+        "min-h-screen py-20 md:py-28 lg:py-32",
         className
       )}
     >
