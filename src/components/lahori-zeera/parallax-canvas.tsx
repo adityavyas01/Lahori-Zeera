@@ -1,25 +1,23 @@
 'use client';
 
 import { useEffect, useRef, useCallback } from 'react';
-import { type Variant, variants } from '@/lib/variants';
+import { type Variant } from '@/lib/variants';
 
 type ParallaxCanvasProps = {
   frameCount: number;
-  enabled: boolean;
   currentVariant: Variant;
-  imageFrames: HTMLImageElement[]; // Only contains the first frame of the first variant initially
 };
 
-export default function ParallaxCanvas({ frameCount, enabled, currentVariant, imageFrames }: ParallaxCanvasProps) {
+export default function ParallaxCanvas({ frameCount, currentVariant }: ParallaxCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const frameIndexRef = useRef(0);
   const animationFrameIdRef = useRef<number>();
   const loadedFramesRef = useRef<Record<string, HTMLImageElement[]>>({});
 
-  const getFrameUrl = (variant: Variant, frame: number) => {
+  const getFrameUrl = useCallback((variant: Variant, frame: number) => {
     const frameNumber = String(frame).padStart(3, '0');
     return variant.baseImageUrl.replace('frame_000', `frame_${frameNumber}`);
-  };
+  }, []);
 
   const drawImageCover = useCallback((ctx: CanvasRenderingContext2D, img: HTMLImageElement) => {
     const canvas = ctx.canvas;
@@ -40,7 +38,6 @@ export default function ParallaxCanvas({ frameCount, enabled, currentVariant, im
     const variantId = currentVariant.id.toString();
     const clampedIndex = Math.max(0, Math.min(frameIndex, frameCount - 1));
 
-    // Check if the variant's frames are loaded
     if (!loadedFramesRef.current[variantId]) {
       loadedFramesRef.current[variantId] = [];
     }
@@ -50,25 +47,36 @@ export default function ParallaxCanvas({ frameCount, enabled, currentVariant, im
     if (image && image.complete) {
       drawImageCover(ctx, image);
     } else {
-      // If the specific frame isn't loaded, load it now
-      const img = new Image();
-      img.src = getFrameUrl(currentVariant, clampedIndex);
-      await new Promise(resolve => { img.onload = resolve; });
-      loadedFramesRef.current[variantId][clampedIndex] = img;
-      drawImageCover(ctx, img);
+      if (clampedIndex === 0) {
+        // Always draw the first frame while others load
+        const firstFrameImg = new Image();
+        firstFrameImg.src = getFrameUrl(currentVariant, 0);
+        await new Promise(resolve => { firstFrameImg.onload = resolve; });
+        loadedFramesRef.current[variantId][0] = firstFrameImg;
+        drawImageCover(ctx, firstFrameImg);
+      }
+      
+      // Load the requested frame in the background if not available
+      if (!image) {
+        const img = new Image();
+        img.src = getFrameUrl(currentVariant, clampedIndex);
+        img.onload = () => {
+          loadedFramesRef.current[variantId][clampedIndex] = img;
+          // Redraw if this is the current frame
+          if (clampedIndex === frameIndexRef.current) {
+            drawImageCover(ctx, img);
+          }
+        };
+      }
     }
-  }, [currentVariant, frameCount, drawImageCover]);
+  }, [currentVariant, frameCount, drawImageCover, getFrameUrl]);
 
   const handleScroll = useCallback(() => {
-    if (!enabled) return;
-    
     const scrollY = window.scrollY;
-    const animationStart = 0;
-    const animationDuration = window.innerHeight; 
-    
-    const scrollFraction = Math.max(0, Math.min(1, (scrollY - animationStart) / animationDuration));
-    
-    const newFrameIndex = Math.floor(scrollFraction * (frameCount -1));
+    // The animation happens over the first 200vh of the 300vh container
+    const animationDuration = window.innerHeight * 2; 
+    const scrollFraction = Math.max(0, Math.min(1, scrollY / animationDuration));
+    const newFrameIndex = Math.floor(scrollFraction * (frameCount - 1));
 
     if (newFrameIndex !== frameIndexRef.current) {
       frameIndexRef.current = newFrameIndex;
@@ -79,7 +87,7 @@ export default function ParallaxCanvas({ frameCount, enabled, currentVariant, im
         drawImage(frameIndexRef.current);
       });
     }
-  }, [enabled, drawImage, frameCount]);
+  }, [drawImage, frameCount]);
 
   const handleResize = useCallback(() => {
     const canvas = canvasRef.current;
@@ -93,33 +101,20 @@ export default function ParallaxCanvas({ frameCount, enabled, currentVariant, im
   useEffect(() => {
     handleResize();
     window.addEventListener('resize', handleResize);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     
-    if (enabled) {
-      window.addEventListener('scroll', handleScroll, { passive: true });
-    }
-    
-    // Draw the initial frame of the current variant
-    drawImage(frameIndexRef.current);
-
-    // Preload first frame of other variants
-    variants.forEach(variant => {
-        if (variant.id !== currentVariant.id) {
-            const img = new Image();
-            img.src = getFrameUrl(variant, 0);
-        }
-    });
-
+    // Draw the initial frame
+    frameIndexRef.current = 0;
+    drawImage(0);
 
     return () => {
       window.removeEventListener('resize', handleResize);
-      if (enabled) {
-        window.removeEventListener('scroll', handleScroll);
-      }
+      window.removeEventListener('scroll', handleScroll);
       if (animationFrameIdRef.current) {
         cancelAnimationFrame(animationFrameIdRef.current);
       }
     };
-  }, [handleResize, handleScroll, enabled, currentVariant, drawImage]);
+  }, [handleResize, handleScroll, drawImage, currentVariant]);
   
   return <canvas ref={canvasRef} className="absolute inset-0 h-full w-full" />;
 }
