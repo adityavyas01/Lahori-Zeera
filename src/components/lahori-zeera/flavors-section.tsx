@@ -5,15 +5,13 @@ import { motion } from 'framer-motion';
 import { variants } from '@/lib/variants';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
-import SectionWrapper from './section-wrapper';
 
 export default function FlavorsSection() {
   const containerVariants = {
     hidden: {},
     visible: {
       transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
+        // No more stagger
       },
     },
   };
@@ -26,7 +24,7 @@ export default function FlavorsSection() {
     visible: {
       scaleY: 1,
       transition: {
-        duration: 1,
+        duration: 0.8,
         ease: [0.6, 0.01, -0.05, 0.95],
       },
     },
@@ -40,14 +38,14 @@ export default function FlavorsSection() {
       transition: {
         duration: 0.8,
         ease: 'easeOut',
-        delay: 0.6,
+        delay: 0.6, // Delay to let the rectangle grow first
       },
     },
   };
 
   return (
-    <SectionWrapper id="flavors" className="p-0 h-screen flex flex-col">
-      <div className="text-center pt-16 pb-8 md:pt-24 md:pb-12">
+    <section id="flavors" className="p-0 h-screen flex flex-col snap-start snap-always">
+      <div className="text-center pt-16 pb-8 md:pt-24 md:pb-12 bg-background">
             <h2 className="font-headline text-4xl sm:text-5xl md:text-6xl font-bold text-foreground">
             Blockbuster Cast
             </h2>
@@ -109,6 +107,6 @@ export default function FlavorsSection() {
           </div>
         ))}
       </motion.div>
-    </SectionWrapper>
+    </section>
   );
 }
